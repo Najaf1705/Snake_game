@@ -9,6 +9,7 @@ const bbgColor="black";
 const snakeColor="green";
 const foodColor="white";
 const unitSize=16;
+let difficulty=document.getElementById("difficultySelect").value;
 let running=false;
 let xVelocity=unitSize;
 let yVelocity=0;
@@ -30,6 +31,7 @@ gameStart();
 
 function gameStart(){
   running=true;
+  document.getElementById("difficultySelect").disabled=true;
   scoreElm.textContent="Score: "+score;
   hscoreElm.textContent="High Score: "+highScore;
   createFood();
@@ -46,16 +48,17 @@ function nextTick(){
       drawSnake();
       checkGameOver();
       nextTick();
-    },100);
+    },difficulty);
   }else{
     displayGameOver();
   }
 };
 function clearBoard(){
-  var gradient = ctx.createLinearGradient(0, 0, bwidth, bwidth);
-  gradient.addColorStop(0, "black");
-  gradient.addColorStop(1, "#ff2222");
-  ctx.fillStyle=gradient;
+  // var gradient = ctx.createLinearGradient(0, 0, bwidth, bwidth);
+  // gradient.addColorStop(0, "pink");
+  // gradient.addColorStop(1, "#ff2222");
+  // ctx.fillStyle=gradient;
+  ctx.fillStyle=bbgColor;
   ctx.fillRect(0,0,bwidth,bwidth);
 };
 function createFood(){
@@ -139,11 +142,14 @@ function checkGameOver(){
   switch (true) {
     case (snake[0].x<0 || snake[0].x>bwidth || snake[0].y<0 || snake[0].y>bwidth):
       running=false;
+      document.getElementById("difficultySelect").disabled=false;
       break;
   }
   for(let i=1;i<snake.length;i++){
     if(snake[i].x==snake[0].x && snake[i].y==snake[0].y){
       running=false;
+      document.getElementById("difficultySelect").disabled=false;
+
     }
   }
 };
@@ -155,8 +161,6 @@ function displayGameOver(){
   running=false;
 };
 function resetGame(){
-  console.log(score);
-  console.log(highScore);
   if(score>highScore){
     console.log("hehe");
     localStorage.setItem('high',score);
@@ -166,6 +170,7 @@ function resetGame(){
   score=0;
   xVelocity=unitSize;
   yVelocity=0;
+  difficulty=document.getElementById("difficultySelect").value;
   snake=[
     {x:unitSize*3,y:0},
     {x:unitSize*2,y:0},
